@@ -1,0 +1,14 @@
+{
+  "name": "internconnect",
+  "version": "1.0.0",
+  "description": "InternConnect - Find Your Perfect Internship",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve dist",
+    "build": "mkdir dist && copy *.html dist\\ && copy *.css dist\\ && copy *.js dist\\",
+    "dev": "serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}

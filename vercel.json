@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "internconnect-frontend",
+  "builds": [
+    {
+      "src": "Project.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/Project.html"
+    }
+  ]
+}
