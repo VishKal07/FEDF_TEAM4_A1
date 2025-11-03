@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternConnect - Find Your Perfect Internship</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #de71f4 0%, #7aafff 100%);
+            transition: all 0.3s ease;
+            color: var(--dark);
+        }
+        
+        .page-section {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding-top: 80px;
+        }
+        
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(192, 98, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 2px;
+        }
+        
+        #chatbot-widget {
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+        
+        #chatbot-chat {
+            max-height: 500px;
+            width: 350px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .user-message {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .bot-message {
+            background: #f1f5f9;
+            color: var(--dark);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .ats-score {
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        .score-excellent { background: #dcfce7; color: #166534; }
+        .score-good { background: #fef3c7; color: #92400e; }
+        .score-fair { background: #fed7aa; color: #9a3412; }
+        .score-poor { background: #fecaca; color: #991b1b; }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .loading-dots:after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .team-member {
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .internship-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .internship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .file-upload-container {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload-container:hover {
+            border-color: #4361ee;
+            background-color: #f8fafc;
+        }
+        
+        .file-upload-container.dragover {
+            border-color: #4361ee;
+            background-color: #e6f0ff;
+        }
+        
+        .internship-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-applied { background-color: #dbeafe; color: #1e40af; }
+        .status-pending { background-color: #fef3c7; color: #92400e; }
+        .status-approved { background-color: #dcfce7; color: #166534; }
+        .status-rejected { background-color: #fecaca; color: #991b1b; }
+        .status-available { background-color: #e5e7eb; color: #374151; }
+        
+        .resume-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .resume-upload-area:hover {
+            border-color: #4361ee;
+            background-color: #f8fafc;
+        }
+        
+        .resume-upload-area.dragover {
+            border-color: #4361ee;
+            background-color: #e6f0ff;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        
+        .chat-input {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 24px;
+            padding: 10px 16px;
+            margin-right: 8px;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: #4361ee;
+        }
+        
+        .send-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .send-btn:hover {
+            background-color: #3a0ca3;
+        }
+        
+        .file-upload-btn {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+        
+        .file-upload-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .apply-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .apply-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .platform-search-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .platform-search-card:hover {
+            transform: translateY(-3px);
+            border-left-color: var(--primary);
+        }
+        
+        .linkedin-card { border-left-color: #0A66C2; }
+        .naukri-card { border-left-color: #00A7B4; }
+        .glassdoor-card { border-left-color: #0CAA41; }
+        .internshala-card { border-left-color: #FF6B00; }
+        
+        .search-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .search-link:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .active-filter {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+        
+        .external-internship {
+            border-left: 4px solid #FF6B00;
+        }
+        
+        .platform-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 107, 0, 0.1);
+            color: #FF6B00;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white/80 backdrop-blur-md fixed w-full z-50 shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#" class="flex items-center space-x-2" onclick="navigateTo('home-page')">
+                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                        <i class="fas fa-briefcase text-white"></i>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">InternConnect</span>
+                </a>
+                <div class="flex items-center">
+                    <div class="hidden md:flex space-x-6 items-center">
+                        <a href="#" class="nav-link text-gray-700 font-medium" onclick="navigateTo('home-page')">Home</a>
+                        <a href="#" class="nav-link text-gray-700 font-medium" onclick="checkAuthAndNavigate('profile-page')">Profile</a>
+                        <a href="#" class="nav-link text-gray-700 font-medium" onclick="checkAuthAndNavigate('dashboard-page')">Dashboard</a>
+                        <a href="#" id="login-nav" class="btn-primary px-5" onclick="navigateTo('login-page')">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                        <a href="#" id="signup-nav" class="btn-primary px-5" onclick="navigateTo('signup-page')">
+                            <i class="fas fa-user-plus mr-2"></i>Sign Up
+                        </a>
+                        <button id="logout-btn" class="btn-primary bg-red-500 hidden px-5" onclick="logout()">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Message Modal -->
+        <div id="message-modal" class="fixed inset-0 hidden flex items-center justify-center z-50 bg-black/50">
+            <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center card">
+                <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-info-circle text-white text-2xl"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold mb-2 text-gray-800"></h3>
+                <p id="modal-message" class="text-gray-600 mb-6"></p>
+                <button id="modal-close" class="btn-primary w-full">OK</button>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <section id="home-page" class="page-section active">
+            <div class="flex flex-col items-center justify-center text-center p-8 md:p-16 rounded-2xl mb-8 gradient-bg text-white">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
+                    Launch Your Career with the Perfect Internship
+                </h1>
+                <p class="text-xl max-w-3xl mb-8 opacity-90">
+                    Connect with top companies and jumpstart your career. Find internships that match your passions and career goals.
+                </p>
+                <button class="px-8 py-4 bg-white text-blue-600 font-bold rounded-full text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg pulse" onclick="navigateTo('signup-page')">
+                    <i class="fas fa-rocket mr-2"></i>Get Started Today
+                </button>
+            </div>
+            
+            <!-- Features Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Smart Matching</h3>
+                    <p class="text-gray-600">Our AI-powered system matches you with internships that fit your skills and interests.</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">ATS Score Checker</h3>
+                    <p class="text-gray-600">Get instant feedback on your resume with our ATS scoring chatbot.</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Track Applications</h3>
+                    <p class="text-gray-600">Monitor your internship applications and get status updates in real-time.</p>
+                </div>
+            </div>
+            
+            <!-- About Section -->
+            <div id="about-section" class="card p-8 md:p-12 my-8">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">About InternConnect</h2>
+                <p class="text-gray-600 text-lg text-center max-w-3xl mx-auto mb-8">
+                    InternConnect is a cutting-edge platform where students can discover and apply for internships that align with their career goals. Our intelligent matching system and ATS score checker give you the competitive edge in today's job market.
+                </p>
+                
+                <!-- Our Story Section -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-600">Our Story</h3>
+                    <p class="text-gray-600">
+                        We set out to create a platform that not only connects students with opportunities but also empowers them with the tools and insights needed to succeed in today's competitive job market.
+                    </p>
+                </div>
+                
+                <!-- Our Mission & Vision Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-blue-600">Our Mission</h3>
+                        <p class="text-gray-600 mb-4">
+                            To bridge the gap between talented students and innovative companies by providing a seamless internship matching experience that benefits both parties.
+                        </p>
+                        <p class="text-gray-600">
+                            We're committed to democratizing access to career opportunities, ensuring that every student, regardless of background, can find internships that help them grow professionally.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-blue-600">Our Vision</h3>
+                        <p class="text-gray-600 mb-4">
+                            We envision a world where every student can easily find internships that not only build their resume but also ignite their passion and set them on a path to career success.
+                        </p>
+                        <p class="text-gray-600">
+                            Through technology and personalized guidance, we aim to become the leading platform for internship discovery and career development.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- What Makes Us Different Section -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-600">What Makes InternConnect Different</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-brain text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">AI-Powered Matching</h4>
+                                <p class="text-gray-600">Our sophisticated algorithm analyzes your skills, interests, and career goals to match you with the perfect internship opportunities.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-robot text-green-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">ATS Optimization</h4>
+                                <p class="text-gray-600">Get real-time feedback on your resume with our ATS score checker, ensuring your application stands out to employers.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-chart-line text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">Application Tracking</h4>
+                                <p class="text-gray-600">Easily manage all your internship applications in one place with our intuitive dashboard and tracking system.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-graduation-cap text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">External Platform Search</h4>
+                                <p class="text-gray-600">Search across LinkedIn, Naukri, Glassdoor, and Internshala for no-experience-needed internships matching your skills.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Section -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-blue-600">Meet Our Team</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="team-member text-center">
+                            <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto mb-4 overflow-hidden">
+                                <img src="https://placehold.co/150x150/e5e7eb/5c6773?text=K.+Lakshmi+Vishali" alt="K. Lakshmi Vishali" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-lg">K. Lakshmi Vishali</h4>
+                            <p class="text-blue-600 mb-2">Co-Founder</p>
+                            </div>
+                        <div class="team-member text-center">
+                            <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto mb-4 overflow-hidden">
+                                <img src="https://placehold.co/150x150/e5e7eb/5c6773?text=Laasya" alt="Laasya" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-lg">Laasya</h4>
+                            <p class="text-blue-600 mb-2">Co-Founder</p>
+                            </div>
+                        <div class="team-member text-center">
+                            <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto mb-4 overflow-hidden">
+                                <img src="https://placehold.co/150x150/e5e7eb/5c6773?text=Swetha+Sriram" alt="Swetha Sriram" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-lg">Swetha Sriram</h4>
+                            <p class="text-blue-600 mb-2">Co-Founder</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sign Up Page -->
+        <section id="signup-page" class="page-section">
+            <div class="max-w-lg mx-auto">
+                <div class="card p-8">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 rounded-full gradient-bg flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user-plus text-white text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-800">Create Your Account</h2>
+                        <p class="text-gray-600 mt-2">Join thousands of students finding their dream internships</p>
+                    </div>
+                    <form id="signup-form" class="space-y-6">
+                        <div>
+                            <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <div class="relative">
+                                <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                                <input type="text" id="signup-name" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="signup-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <div class="relative">
+                                <i class="fas fa-phone absolute left-3 top-3 text-gray-400"></i>
+                                <input type="tel" id="signup-phone" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <div class="relative">
+                                <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+                                <input type="email" id="signup-email" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="signup-skills" class="block text-sm font-medium text-gray-700 mb-2">Skills (comma-separated)</label>
+                            <div class="relative">
+                                <i class="fas fa-tools absolute left-3 top-3 text-gray-400"></i>
+                                <input type="text" id="signup-skills" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border" placeholder="JavaScript, Python, React, etc.">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                                <input type="password" id="signup-password" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-primary w-full py-3 text-lg">
+                                <i class="fas fa-user-plus mr-2"></i>Create Account
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-600">
+                            Already have an account? <a href="#" class="text-blue-600 hover:text-blue-500 font-medium" onclick="navigateTo('login-page')">Log in</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login-page" class="page-section">
+            <div class="max-w-md mx-auto">
+                <div class="card p-8">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 rounded-full gradient-bg flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-sign-in-alt text-white text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-800">Welcome Back</h2>
+                        <p class="text-gray-600 mt-2">Sign in to your InternConnect account</p>
+                    </div>
+                    <form id="login-form" class="space-y-6">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <div class="relative">
+                                <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+                                <input type="email" id="login-email" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                                <input type="password" id="login-password" required class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-primary w-full py-3 text-lg">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Login to Your Account
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-600">
+                            Don't have an account? <a href="#" class="text-blue-600 hover:text-blue-500 font-medium" onclick="navigateTo('signup-page')">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profile-page" class="page-section">
+            <div class="max-w-2xl mx-auto">
+                <div class="card p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800">My Profile</h2>
+                        <p class="text-gray-600 mt-2">Manage your personal information and skills</p>
+                    </div>
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="relative">
+                            <img id="profile-photo" src="https://placehold.co/150x150/e5e7eb/5c6773?text=Upload+Photo" alt="Profile Photo" class="w-32 h-32 rounded-full object-cover mb-4 shadow-lg">
+                            <label for="profile-photo-upload" class="absolute bottom-2 right-2 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600 transition">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" id="profile-photo-upload" accept="image/*" class="hidden">
+                        </div>
+                    </div>
+                    <form id="profile-form" class="space-y-6">
+                        <div>
+                            <label for="profile-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="profile-name" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                        </div>
+                        <div>
+                            <label for="profile-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="profile-phone" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                        </div>
+                        <div>
+                            <label for="profile-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="profile-email" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+                        </div>
+                        <div>
+                            <label for="profile-skills" class="block text-sm font-medium text-gray-700 mb-2">Skills (comma-separated)</label>
+                            <input type="text" id="profile-skills" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border" placeholder="JavaScript, Python, React, etc.">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-primary w-full py-3 text-lg bg-green-500 hover:bg-green-600">
+                                <i class="fas fa-save mr-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Page -->
+        <section id="dashboard-page" class="page-section">
+            <div class="card p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Internship Dashboard</h2>
+                    <p class="text-gray-600 mt-2">Find and manage your internship applications</p>
+                </div>
+                
+                <!-- Skills Display -->
+                <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-blue-800">Your Skills</h3>
+                            <p id="user-skills-display" class="text-blue-600">Loading skills...</p>
+                        </div>
+                        <button onclick="searchExternalInternships()" class="btn-primary">
+                            <i class="fas fa-search mr-2"></i>Search External Platforms
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="filter-btn btn-primary active-filter" onclick="filterInternships('All')">All Internships</button>
+                    <button class="filter-btn bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-full transition" onclick="filterInternships('Applied')">Applied</button>
+                    <button class="filter-btn bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-6 rounded-full transition" onclick="filterInternships('Pending')">Pending</button>
+                    <button class="filter-btn bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-6 rounded-full transition" onclick="filterInternships('Approved')">Approved/Finished</button>
+                </div>
+
+                <!-- External Search Results Section -->
+                <div id="external-search-section" class="mb-8 hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">External Internship Results</h3>
+                        <button onclick="hideExternalSearch()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="external-internship-list" class="grid sm:grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- External internships will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loading-spinner" class="text-center py-8 hidden">
+                    <i class="fas fa-spinner fa-spin text-3xl text-blue-500 mb-4"></i>
+                    <p class="text-gray-600">Loading internships...</p>
+                </div>
+
+                <!-- Internships List -->
+                <div id="internship-list" class="grid sm:grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Internships will be rendered here -->
+                </div>
+
+                <!-- No Internships Message -->
+                <div id="no-internships" class="text-center py-8 hidden">
+                    <i class="fas fa-inbox text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">No internships found matching your skills.</p>
+                    <p class="text-gray-400 text-sm mt-2">Update your skills in your profile or search external platforms.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-widget" class="fixed">
+        <!-- Chat window -->
+        <div id="chatbot-chat" class="hidden bg-white rounded-2xl overflow-hidden flex flex-col shadow-xl">
+            <div class="gradient-bg text-white font-bold p-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-robot mr-2"></i>
+                    <span>InternConnect Assistant</span>
+                </div>
+                <button id="chatbot-close" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- AI Provider Selector -->
+            <div id="ai-provider-selector" class="flex justify-center space-x-2 p-2 bg-gray-100">
+                <button onclick="setAIProvider('openai')" class="px-3 py-1 text-xs bg-blue-500 text-white rounded">OpenAI</button>
+                <button onclick="setAIProvider('dialogflow')" class="px-3 py-1 text-xs bg-green-500 text-white rounded">Dialogflow</button>
+                <button onclick="setAIProvider('watson')" class="px-3 py-1 text-xs bg-purple-500 text-white rounded">Watson</button>
+            </div>
+            
+            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto max-h-96">
+                <div class="bot-message chat-message">
+                    <p>Hello! I'm your InternConnect assistant. I can help you with:</p>
+                    <ul class="list-disc ml-4 mt-2">
+                        <li>Checking your resume ATS score</li>
+                        <li>Finding internship opportunities</li>
+                        <li>Searching external platforms</li>
+                        <li>Answering questions about the platform</li>
+                    </ul>
+                    <p class="mt-2">How can I help you today?</p>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <button id="file-upload-btn" class="file-upload-btn" title="Upload Resume">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <input type="file" id="resume-upload" accept=".pdf,.doc,.docx" class="hidden">
+                <input type="text" id="chatbot-input" class="chat-input" placeholder="Type your message...">
+                <button id="send-btn" class="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Chatbot toggle button -->
+        <button id="chatbot-toggle" class="w-16 h-16 rounded-full gradient-bg shadow-lg flex items-center justify-center text-white hover:scale-110 transition-transform">
+            <i class="fas fa-robot text-2xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Application state
+        const state = {
+            currentUser: null,
+            internships: [],
+            externalInternships: [],
+            currentFilter: 'All'
+        };
+
+        // Platform configurations
+        const PLATFORMS = {
+            linkedin: {
+                name: 'LinkedIn',
+                icon: 'fab fa-linkedin',
+                color: 'linkedin-card',
+                baseUrl: 'https://www.linkedin.com/jobs/search/',
+                searchParams: {
+                    keywords: '',
+                    location: 'Worldwide',
+                    f_AL: 'true',
+                    f_E: '1',
+                    f_WT: '2'
+                }
+            },
+            naukri: {
+                name: 'Naukri.com',
+                icon: 'fas fa-briefcase',
+                color: 'naukri-card',
+                baseUrl: 'https://www.naukri.com/',
+                searchParams: {
+                    kw: '',
+                    experience: '0',
+                    jobType: '1'
+                }
+            },
+            glassdoor: {
+                name: 'Glassdoor',
+                icon: 'fas fa-building',
+                color: 'glassdoor-card',
+                baseUrl: 'https://www.glassdoor.com/Job/jobs.htm',
+                searchParams: {
+                    'sc.keyword': '',
+                    jobType: 'internship',
+                    fromAge: '1'
+                }
+            },
+            internshala: {
+                name: 'Internshala',
+                icon: 'fas fa-graduation-cap',
+                color: 'internshala-card',
+                baseUrl: 'https://internshala.com/internships/',
+                searchParams: {
+                    keywords: '',
+                    stipend: '0'
+                }
+            }
+        };
+
+        // DOM elements
+        const elements = {
+            messageModal: document.getElementById('message-modal'),
+            modalTitle: document.getElementById('modal-title'),
+            modalMessage: document.getElementById('modal-message'),
+            modalClose: document.getElementById('modal-close'),
+            loadingSpinner: document.getElementById('loading-spinner'),
+            internshipList: document.getElementById('internship-list'),
+            noInternships: document.getElementById('no-internships'),
+            userSkillsDisplay: document.getElementById('user-skills-display'),
+            externalSearchSection: document.getElementById('external-search-section'),
+            externalInternshipList: document.getElementById('external-internship-list')
+        };
+
+        // AI Service Management
+        let currentAIProvider = 'openai';
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            checkAuthState();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Modal close button
+            elements.modalClose.addEventListener('click', hideModal);
+            
+            // Chatbot toggle
+            document.getElementById('chatbot-toggle').addEventListener('click', toggleChatbot);
+            document.getElementById('chatbot-close').addEventListener('click', toggleChatbot);
+            
+            // Chatbot send message
+            document.getElementById('send-btn').addEventListener('click', sendChatMessage);
+            document.getElementById('chatbot-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+            
+            // File upload for chatbot
+            document.getElementById('file-upload-btn').addEventListener('click', function() {
+                document.getElementById('resume-upload').click();
+            });
+            document.getElementById('resume-upload').addEventListener('change', handleResumeUpload);
+            
+            // Form submissions
+            document.getElementById('signup-form').addEventListener('submit', handleSignup);
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('profile-form').addEventListener('submit', handleProfileUpdate);
+            
+            // Profile photo upload
+            document.getElementById('profile-photo-upload').addEventListener('change', handleProfilePhotoUpload);
+        }
+
+        // Navigation functions
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'dashboard-page') {
+                loadDashboard();
+            }
+            
+            if (pageId === 'profile-page' && state.currentUser) {
+                populateProfileForm();
+            }
+        }
+
+        function checkAuthAndNavigate(pageId) {
+            if (state.currentUser) {
+                navigateTo(pageId);
+            } else {
+                showModal('Authentication Required', 'Please log in to access this page.');
+                navigateTo('login-page');
+            }
+        }
+
+        // Dashboard functions
+        async function loadDashboard() {
+            if (!state.currentUser) return;
+            
+            // Update skills display
+            if (state.currentUser.skills && state.currentUser.skills.length > 0) {
+                elements.userSkillsDisplay.textContent = state.currentUser.skills.join(', ');
+            } else {
+                elements.userSkillsDisplay.textContent = 'No skills added. Update your profile.';
+            }
+            
+            // Load internships
+            await loadInternships();
+        }
+
+        async function loadInternships() {
+            elements.loadingSpinner.classList.remove('hidden');
+            elements.internshipList.classList.add('hidden');
+            elements.noInternships.classList.add('hidden');
+            
+            try {
+                // Start with empty internships array - NO SAMPLE DATA
+                state.internships = [];
+                
+                // Apply current filter (will show empty state)
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading internships:', error);
+                showError('Unable to load internships. Please try again later.');
+            } finally {
+                elements.loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        // Filter functions - FIXED AND WORKING
+        function filterInternships(filter) {
+            state.currentFilter = filter;
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active-filter');
+                btn.classList.remove('btn-primary');
+                btn.classList.add('bg-blue-400', 'hover:bg-blue-500', 'text-white');
+            });
+            
+            // Find and activate the clicked button
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(filter)) {
+                    btn.classList.add('active-filter', 'btn-primary');
+                    btn.classList.remove('bg-blue-400', 'hover:bg-blue-500');
+                }
+            });
+            
+            // Apply filtering
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // Clear the internship list
+            elements.internshipList.innerHTML = '';
+            
+            if (state.currentFilter === 'All') {
+                // Show all available internships
+                if (state.internships.length === 0) {
+                    elements.noInternships.classList.remove('hidden');
+                    elements.internshipList.classList.add('hidden');
+                    // Update message for All filter
+                    document.querySelector('#no-internships p').textContent = 'No internships found matching your skills.';
+                } else {
+                    elements.noInternships.classList.add('hidden');
+                    elements.internshipList.classList.remove('hidden');
+                    state.internships.forEach(internship => {
+                        const internshipCard = createInternshipCard(internship);
+                        elements.internshipList.appendChild(internshipCard);
+                    });
+                }
+                return;
+            }
+            
+            // Filter internships based on status
+            let filteredInternships = [];
+            let message = '';
+            
+            if (state.currentFilter === 'Applied') {
+                filteredInternships = state.internships.filter(internship => internship.status === 'Applied');
+                message = 'No applied internships found.';
+            } else if (state.currentFilter === 'Pending') {
+                filteredInternships = state.internships.filter(internship => internship.status === 'Pending');
+                message = 'No pending internships found.';
+            } else if (state.currentFilter === 'Approved') {
+                filteredInternships = state.internships.filter(internship => 
+                    internship.status === 'Approved' || internship.status === 'Finished'
+                );
+                message = 'No approved or finished internships found.';
+            }
+            
+            // Display results
+            if (filteredInternships.length === 0) {
+                elements.noInternships.classList.remove('hidden');
+                elements.internshipList.classList.add('hidden');
+                // Update the no internships message based on filter
+                document.querySelector('#no-internships p').textContent = message;
+            } else {
+                elements.noInternships.classList.add('hidden');
+                elements.internshipList.classList.remove('hidden');
+                
+                filteredInternships.forEach(internship => {
+                    const internshipCard = createInternshipCard(internship);
+                    elements.internshipList.appendChild(internshipCard);
+                });
+            }
+            
+            // Hide external search section when filtering non-All categories
+            if (state.currentFilter !== 'All') {
+                elements.externalSearchSection.classList.add('hidden');
+            }
+        }
+
+        function createInternshipCard(internship) {
+            const card = document.createElement('div');
+            card.className = 'internship-card card p-6';
+            
+            // Check if it's an external internship
+            const isExternal = internship.id && internship.id.toString().startsWith('ext-');
+            const canApply = internship.status === 'Available' && !isExternal;
+            const applied = internship.status === 'Applied' || internship.status === 'Pending' || internship.status === 'Approved';
+            
+            card.innerHTML = `
+                ${isExternal ? `
+                    <div class="platform-badge">
+                        <i class="${getPlatformIcon(internship.platform)} mr-1"></i>
+                        ${internship.platform}
+                    </div>
+                ` : ''}
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">${internship.title}</h3>
+                        <p class="text-gray-600">${internship.company} • ${internship.location}</p>
+                    </div>
+                    <span class="internship-status status-${internship.status.toLowerCase()}">
+                        ${isExternal ? 'External' : internship.status}
+                    </span>
+                </div>
+                <div class="mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">${internship.type}</span>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded ml-2">${internship.duration}</span>
+                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded ml-2">${internship.stipend}</span>
+                </div>
+                <p class="text-gray-600 mb-4">${internship.description}</p>
+                <div class="mb-4">
+                    ${internship.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">
+                        ${isExternal ? `Found on ${internship.platform}` : 
+                          internship.appliedDate ? `Applied: ${internship.appliedDate}` : 'Available for application'}
+                    </span>
+                    <div class="flex space-x-2">
+                        <button class="text-blue-600 hover:text-blue-800 font-medium" onclick="${isExternal ? `viewExternalInternshipDetails('${internship.id}')` : `viewInternshipDetails(${internship.id})`}">
+                            Details <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                        ${canApply ? 
+                            `<button class="apply-btn" onclick="applyForInternship(${internship.id})">
+                                <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                            </button>` : 
+                            applied && !isExternal ?
+                            `<button class="apply-btn" disabled>
+                                <i class="fas fa-check mr-2"></i>Applied
+                            </button>` :
+                            isExternal ?
+                            `<button class="apply-btn" onclick="applyForExternalInternship('${internship.id}')">
+                                <i class="fas fa-external-link-alt mr-2"></i>Apply Now
+                            </button>` :
+                            ''
+                        }
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // External Search Functions
+        async function searchExternalInternships() {
+            if (!state.currentUser || !state.currentUser.skills || state.currentUser.skills.length === 0) {
+                showModal('Skills Required', 'Please update your skills in your profile to search for external internships.');
+                return;
+            }
+
+            elements.externalInternshipList.innerHTML = '<div class="col-span-2 text-center py-4"><i class="fas fa-spinner fa-spin text-blue-500 mr-2"></i>Searching for external internships...</div>';
+            elements.externalSearchSection.classList.remove('hidden');
+
+            const userSkills = state.currentUser.skills;
+            const primarySkill = userSkills[0] || 'intern';
+            
+            try {
+                // Simulate API call to fetch external internships
+                const externalInternships = await fetchExternalInternships(primarySkill);
+                state.externalInternships = externalInternships;
+                renderExternalInternships();
+            } catch (error) {
+                console.error('Error fetching external internships:', error);
+                elements.externalInternshipList.innerHTML = `
+                    <div class="col-span-2 text-center py-4">
+                        <i class="fas fa-exclamation-triangle text-3xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">Unable to load external internships. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Simulated function to fetch external internships
+        async function fetchExternalInternships(skill) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Return mock data for demonstration
+            return [
+                {
+                    id: 'ext-1',
+                    title: `${skill} Developer Intern`,
+                    company: 'TechCorp Inc.',
+                    location: 'Remote',
+                    type: 'Full-time',
+                    duration: '3 months',
+                    stipend: '$1,500/month',
+                    description: `We're looking for a motivated ${skill} intern to join our development team. No prior experience required.`,
+                    skills: [skill, 'HTML', 'CSS'],
+                    platform: 'LinkedIn',
+                    status: 'Available'
+                },
+                {
+                    id: 'ext-2',
+                    title: `${skill} Engineering Intern`,
+                    company: 'StartUp Innovations',
+                    location: 'San Francisco, CA',
+                    type: 'Part-time',
+                    duration: '6 months',
+                    stipend: '$2,000/month',
+                    description: `Join our fast-paced startup as a ${skill} intern and work on cutting-edge projects.`,
+                    skills: [skill, 'React', 'Node.js'],
+                    platform: 'Glassdoor',
+                    status: 'Available'
+                }
+            ];
+        }
+
+        function renderExternalInternships() {
+            elements.externalInternshipList.innerHTML = '';
+            
+            if (state.externalInternships.length === 0) {
+                elements.externalInternshipList.innerHTML = `
+                    <div class="col-span-2 text-center py-4">
+                        <i class="fas fa-inbox text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">No external internships found.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            state.externalInternships.forEach(internship => {
+                const internshipCard = createInternshipCard(internship);
+                elements.externalInternshipList.appendChild(internshipCard);
+            });
+        }
+
+        function getPlatformIcon(platformName) {
+            switch(platformName) {
+                case 'LinkedIn': return 'fab fa-linkedin';
+                case 'Glassdoor': return 'fas fa-building';
+                case 'Naukri.com': return 'fas fa-briefcase';
+                case 'Internshala': return 'fas fa-graduation-cap';
+                default: return 'fas fa-globe';
+            }
+        }
+
+        function hideExternalSearch() {
+            elements.externalSearchSection.classList.add('hidden');
+        }
+
+        function applyForExternalInternship(internshipId) {
+            const internship = state.externalInternships.find(i => i.id === internshipId);
+            if (internship) {
+                showModal(
+                    'External Application', 
+                    `To apply for "${internship.title}" at ${internship.company}, you'll need to visit ${internship.platform} directly. We'll redirect you to the application page.`
+                );
+                
+                // In a real implementation, this would redirect to the actual application page
+                setTimeout(() => {
+                    window.open(`https://${internship.platform.toLowerCase().replace('.com', '')}.com`, '_blank');
+                }, 2000);
+            }
+        }
+
+        function viewExternalInternshipDetails(internshipId) {
+            const internship = state.externalInternships.find(i => i.id === internshipId);
+            if (internship) {
+                showModal(
+                    internship.title, 
+                    `
+                    <div class="space-y-3">
+                        <p><strong>Company:</strong> ${internship.company}</p>
+                        <p><strong>Location:</strong> ${internship.location}</p>
+                        <p><strong>Type:</strong> ${internship.type}</p>
+                        <p><strong>Duration:</strong> ${internship.duration}</p>
+                        <p><strong>Stipend:</strong> ${internship.stipend}</p>
+                        <p><strong>Description:</strong> ${internship.description}</p>
+                        <p><strong>Skills Required:</strong> ${internship.skills.join(', ')}</p>
+                        <p><strong>Platform:</strong> ${internship.platform}</p>
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p class="text-blue-700 text-sm"><i class="fas fa-info-circle mr-1"></i> This internship is hosted on ${internship.platform}. You'll be redirected to their site to apply.</p>
+                        </div>
+                    </div>
+                    `
+                );
+            }
+        }
+
+        // Application functions
+        async function applyForInternship(internshipId) {
+            if (!state.currentUser) {
+                showModal('Authentication Required', 'Please log in to apply for internships.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/apply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: state.currentUser.id,
+                        internship_id: internshipId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showModal('Application Submitted', 'Your application has been submitted successfully!');
+                    
+                    // Update the internship status locally
+                    const internship = state.internships.find(i => i.id === internshipId);
+                    if (internship) {
+                        internship.status = 'Applied';
+                        internship.appliedDate = new Date().toLocaleDateString();
+                    }
+                    
+                    // Re-render with current filter
+                    applyFilters();
+                } else {
+                    showModal('Application Failed', data.message || 'Failed to submit application');
+                }
+            } catch (error) {
+                console.error('Error applying for internship:', error);
+                showModal('Connection Error', 'Unable to submit application. Please try again later.');
+            }
+        }
+
+        function viewInternshipDetails(id) {
+            const internship = state.internships.find(i => i.id === id);
+            if (internship) {
+                showModal(
+                    internship.title, 
+                    `
+                    <div class="space-y-3">
+                        <p><strong>Company:</strong> ${internship.company}</p>
+                        <p><strong>Location:</strong> ${internship.location}</p>
+                        <p><strong>Type:</strong> ${internship.type}</p>
+                        <p><strong>Duration:</strong> ${internship.duration}</p>
+                        <p><strong>Stipend:</strong> ${internship.stipend}</p>
+                        <p><strong>Description:</strong> ${internship.description}</p>
+                        <p><strong>Skills Required:</strong> ${internship.skills.join(', ')}</p>
+                        <p><strong>Status:</strong> <span class="internship-status status-${internship.status.toLowerCase()}">${internship.status}</span></p>
+                        ${internship.appliedDate ? `<p><strong>Applied Date:</strong> ${internship.appliedDate}</p>` : ''}
+                    </div>
+                    `
+                );
+            }
+        }
+
+        // Authentication functions
+        async function handleSignup(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('signup-name').value,
+                phone: document.getElementById('signup-phone').value,
+                email: document.getElementById('signup-email').value,
+                skills: document.getElementById('signup-skills').value.split(',').map(skill => skill.trim()),
+                password: document.getElementById('signup-password').value
+            };
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    state.currentUser = data.user;
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    updateNavigation();
+                    showModal('Account Created', 'Your account has been created successfully!');
+                    navigateTo('dashboard-page');
+                } else {
+                    showModal('Signup Failed', data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showModal('Connection Error', 'Unable to connect to server. Please try again later.');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const loginData = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            };
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    state.currentUser = data.user;
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    updateNavigation();
+                    showModal('Login Successful', `Welcome back, ${data.user.name}!`);
+                    navigateTo('dashboard-page');
+                } else {
+                    showModal('Login Failed', data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showModal('Connection Error', 'Unable to connect to server. Please try again later.');
+            }
+        }
+
+        function logout() {
+            state.currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateNavigation();
+            showModal('Logged Out', 'You have been successfully logged out.');
+            navigateTo('home-page');
+        }
+
+        function updateNavigation() {
+            if (state.currentUser) {
+                document.getElementById('login-nav').classList.add('hidden');
+                document.getElementById('signup-nav').classList.add('hidden');
+                document.getElementById('logout-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('login-nav').classList.remove('hidden');
+                document.getElementById('signup-nav').classList.remove('hidden');
+                document.getElementById('logout-btn').classList.add('hidden');
+            }
+        }
+
+        // Profile functions
+        function populateProfileForm() {
+            if (!state.currentUser) return;
+            
+            document.getElementById('profile-name').value = state.currentUser.name;
+            document.getElementById('profile-phone').value = state.currentUser.phone;
+            document.getElementById('profile-email').value = state.currentUser.email;
+            document.getElementById('profile-skills').value = state.currentUser.skills ? state.currentUser.skills.join(', ') : '';
+        }
+
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            
+            if (!state.currentUser) return;
+            
+            const name = document.getElementById('profile-name').value;
+            const phone = document.getElementById('profile-phone').value;
+            const email = document.getElementById('profile-email').value;
+            const skills = document.getElementById('profile-skills').value;
+            
+            // Update user data
+            state.currentUser.name = name;
+            state.currentUser.phone = phone;
+            state.currentUser.email = email;
+            state.currentUser.skills = skills.split(',').map(skill => skill.trim());
+            
+            // Update in localStorage
+            localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+            
+            showModal('Profile Updated', 'Your profile has been updated successfully!');
+        }
+
+        function handleProfilePhotoUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profile-photo').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Initialize the application
+        function initializeApp() {
+            // Check if user is logged in from localStorage
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                state.currentUser = JSON.parse(savedUser);
+                updateNavigation();
+            }
+        }
+
+        function checkAuthState() {
+            if (state.currentUser) {
+                updateNavigation();
+            }
+        }
+
+        // Chatbot functions
+        function toggleChatbot() {
+            document.getElementById('chatbot-chat').classList.toggle('hidden');
+        }
+
+        async function sendChatMessage() {
+            const message = document.getElementById('chatbot-input').value.trim();
+            if (!message) return;
+            
+            addMessageToChat(message, 'user');
+            document.getElementById('chatbot-input').value = '';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        provider: currentAIProvider 
+                    })
+                });
+                
+                const data = await response.json();
+                addMessageToChat(data.response, 'bot');
+            } catch (error) {
+                console.error('Error sending message:', error);
+                // Fallback to local response
+                const response = await generateFallbackResponse(message);
+                if (response) {
+                    addMessageToChat(response, 'bot');
+                }
+            }
+        }
+
+        function addMessageToChat(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            messageDiv.innerHTML = `<p>${message}</p>`;
+            document.getElementById('chatbot-messages').appendChild(messageDiv);
+            document.getElementById('chatbot-messages').scrollTop = document.getElementById('chatbot-messages').scrollHeight;
+        }
+
+        async function handleResumeUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            const validTypes = ['.pdf', '.doc', '.docx', '.txt'];
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!validTypes.includes(fileExtension)) {
+                showModal('Invalid File', 'Please upload a PDF, DOC, DOCX, or TXT file.');
+                return;
+            }
+            
+            addMessageToChat(`Resume uploaded: ${file.name}`, 'user');
+            addMessageToChat("Analyzing your resume with AI...", 'bot');
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/analyze-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResumeAnalysis(data.analysis);
+                } else {
+                    addMessageToChat("Sorry, I couldn't analyze your resume. Please try again.", 'bot');
+                }
+            } catch (error) {
+                console.error('Error analyzing resume:', error);
+                addMessageToChat("I'm having trouble analyzing your resume right now. Please try again later.", 'bot');
+            }
+            
+            e.target.value = '';
+        }
+
+        function setAIProvider(provider) {
+            currentAIProvider = provider;
+            showModal('AI Provider Changed', `Now using ${provider.toUpperCase()} for responses`);
+        }
+
+        function displayResumeAnalysis(analysis) {
+            const score = analysis.ats_score;
+            const category = analysis.score_category;
+            
+            let scoreClass = 'score-excellent';
+            if (score < 70) scoreClass = 'score-poor';
+            else if (score < 80) scoreClass = 'score-fair';
+            else if (score < 90) scoreClass = 'score-good';
+            
+            let response = `
+                <p><strong>ATS Compatibility Analysis:</strong></p>
+                <p class="ats-score ${scoreClass}">${score}/100 - ${category}</p>
+                <p><strong>Key Findings:</strong></p>
+                <ul class="list-disc ml-4">
+            `;
+            
+            analysis.suggestions.forEach(suggestion => {
+                response += `<li>${suggestion}</li>`;
+            });
+            
+            response += `</ul>`;
+            
+            response += `<p class="mt-2"><strong>Recommendation:</strong> `;
+            if (score >= 80) {
+                response += `Your resume is well-optimized! Consider applying to internships that match your skills.`;
+            } else if (score >= 60) {
+                response += `Good foundation. Implement the suggestions above to improve your score.`;
+            } else {
+                response += `Significant improvements needed. Focus on adding missing sections and keywords.`;
+            }
+            response += `</p>`;
+            
+            addMessageToChat(response, 'bot');
+        }
+
+        // Enhanced chatbot function to handle external search requests
+        async function generateFallbackResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('external') || lowerMessage.includes('linkedin') || lowerMessage.includes('naukri') || 
+                lowerMessage.includes('glassdoor') || lowerMessage.includes('internshala') || lowerMessage.includes('search')) {
+                
+                if (!state.currentUser) {
+                    return "Please log in to access external internship search features.";
+                }
+                
+                if (!state.currentUser.skills || state.currentUser.skills.length === 0) {
+                    return "Please update your skills in your profile to search for external internships.";
+                }
+                
+                return "I can help you find external internships! Click the 'Search External Platforms' button in your dashboard to see internships from LinkedIn, Naukri, Glassdoor, and Internshala.";
+            }
+            
+            if (lowerMessage.includes('resume') || lowerMessage.includes('ats') || lowerMessage.includes('cv')) {
+                return "I can analyze your resume for ATS compatibility. Please upload your resume using the paperclip icon.";
+            } else if (lowerMessage.includes('internship') || lowerMessage.includes('recommend') || lowerMessage.includes('suggest')) {
+                return "I can help you find internship opportunities! Check out our external search feature for platforms like LinkedIn, Naukri, Glassdoor, and Internshala.";
+            } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                return "Hello! I'm your InternConnect assistant. I can help you with resume analysis, internship recommendations, and searching external platforms. How can I assist you today?";
+            } else {
+                return "I'm here to help with your internship search! You can ask me about resume analysis, internship opportunities, or searching external platforms. What would you like to know?";
+            }
+        }
+
+        // Modal functions
+        function showModal(title, message) {
+            elements.modalTitle.textContent = title;
+            elements.modalMessage.innerHTML = message;
+            elements.messageModal.classList.remove('hidden');
+        }
+
+        function hideModal() {
+            elements.messageModal.classList.add('hidden');
+        }
+
+        function showError(message) {
+            elements.internshipList.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <i class="fas fa-exclamation-triangle text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">${message}</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
