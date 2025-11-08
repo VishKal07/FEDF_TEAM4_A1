@@ -5,6 +5,7 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
+    rootDirectory: backend
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.12
