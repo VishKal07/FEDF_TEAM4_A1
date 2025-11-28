@@ -5,10 +5,16 @@
   "main": "index.html",
   "scripts": {
     "start": "serve dist",
-    "build": "mkdir dist && copy *.html dist\\ && copy *.css dist\\ && copy *.js dist\\",
+    "build": "npm run clean && npm run copy-files",
+    "clean": "rimraf dist",
+    "copy-files": "copyfiles -u 1 \"**/*.{html,css,js,json,png,jpg,svg,ico}\" \"!node_modules/**\" \"!dist/**\" dist/",
     "dev": "serve ."
   },
   "dependencies": {
     "serve": "^14.2.1"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.5"
   }
 }

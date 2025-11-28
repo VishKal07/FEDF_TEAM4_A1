@@ -1,6 +1,6 @@
--- InternConnect Database Schema
-    CREATE DATABASE IF NOT EXISTS InternConnect;
-    USE InternConnect;  
+-- IC1 Database Schema
+    CREATE DATABASE IF NOT EXISTS IC1;
+    USE IC1;  
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

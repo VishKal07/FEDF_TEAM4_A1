@@ -1,7 +1,9 @@
 # InternConnect
 
 A platform connecting students with internship opportunities.
+## License
 
+This project is licensed under the Apache License 2.0 - see the [LICENSE.txt](LICENSE.txt) file for details.
 ## Deployment Instructions
 
 ### Prerequisites
@@ -61,5 +63,6 @@ ProjectV2/
 ├── package.json    # Project configuration
 ├── vercel.json     # Vercel configuration
 ├── render.yaml     # Render configuration
+├── LICENSE.txt     
 └── README.md       # Documentation
 ```
